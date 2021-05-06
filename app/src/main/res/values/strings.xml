@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Lists 2</string>
+    <string name="company_logo">Company logo</string>
+    <string name="mercury_text">null?</string>
+    <string name="add_review"> ✚ Add review </string>
+    <string name="develop_company">Develop company</string>
+    <string name="client_avatar">Client avatar</string>
+    <string name="enter_you_name">Enter you name</string>
+    <string name="add_new_review">Add new review</string>
+    <string name="you_name">You name:</string>
+    <string name="you_review">You review:</string>
+    <string name="enter_you_review">Enter you review</string>
+    <string name="you_rate">You rate:</string>
+    <string name="click_add_review_add_new_company"><![CDATA[Click: add review -> Add new company]]></string>
+    <string name="vitali_review_url">https://www.pngjoy.com/pngm/186/3682484_harambe-face-sample-avatar-hd-png-download.png</string>
+    <string name="linear">Linear</string>
+    <string name="Grid">Grid</string>
+    <string name="Staggered">Staggered</string>
+    <string-array name="number_array">
+        <item>1.0</item>
+        <item>2.0</item>
+        <item>3.0</item>
+        <item>4.0</item>
+        <item>5.0</item>
+    </string-array>
+</resources>
