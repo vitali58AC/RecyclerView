@@ -11,7 +11,7 @@ sealed class Items :Parcelable {
         val image: String,
         val name: String,
         val price: String,
-        val text: String,
+        val descriptions: String,
         val location: String,
         val rating: Double
     ) : Items() {
@@ -21,28 +21,28 @@ sealed class Items :Parcelable {
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/3df13e745120719d5ba56f4876b8fa61.png",
                     name = "Mercury Development",
                     price = "\$50 - \$99 / hr",
-                    text = "Full Stack Development, UX/UI, Testing, Quality Assurance, Business Analysis, Staff Augmentation, and Consulting",
+                    descriptions = "Full Stack Development, UX/UI, Testing, Quality Assurance, Business Analysis, Staff Augmentation, and Consulting",
                     location = "▽ Samara, Russia",
                     rating = 5.0
                 ), Company(
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/magora_sign_200px-.png",
                     name = "Magora",
                     price = "\$50 - \$99 / hr",
-                    text = "Magora is an IT consultant that offers digital transformation services to start-ups and enterprises",
+                    descriptions = "Magora is an IT consultant that offers digital transformation services to start-ups and enterprises",
                     location = "▽ St. Petersburg, Russia",
                     rating = 4.7
                 ), Company(
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/158064806d43071503ff578e453d660c.png",
                     name = "Orangesoft",
                     price = "\$50 - \$99 / hr",
-                    text = "We create great mobile and web apps using the latest technologies focused on building elegant and functional products.",
+                    descriptions = "We create great mobile and web apps using the latest technologies focused on building elegant and functional products.",
                     location = "▽ Moscow, Russia",
                     rating = 5.0
                 ), Company(
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/17884187_10154220930360448_3201341747770140275_n.png",
                     name = "Andersen",
                     price = "\$25 - \$49 / hr",
-                    text = "Offices worldwide — Western and Eastern Europe, the US, Australia",
+                    descriptions = "Offices worldwide — Western and Eastern Europe, the US, Australia",
                     location = "▽ St.Petersburg, Russia",
                     rating = 4.9
                 ),
@@ -50,7 +50,7 @@ sealed class Items :Parcelable {
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/profile_photo512.png",
                     name = "nomtek",
                     price = "\$50 - \$99 / hr",
-                    text = "As a company, we focus mostly on mobile app design and development and also on Augmented and Mixed Reality products.",
+                    descriptions = "As a company, we focus mostly on mobile app design and development and also on Augmented and Mixed Reality products.",
                     location = "▽ Wroclaw, Poland",
                     rating = 4.9
                 ),
@@ -58,7 +58,7 @@ sealed class Items :Parcelable {
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/5198bbb11bba925df59511218c449f4b.png",
                     name = "ChopDawg.com",
                     price = "$150 - $199 / hr",
-                    text = "Since 2009, we've partnered with startups and enterprises around the world to launch 350+ next-generation apps.",
+                    descriptions = "Since 2009, we've partnered with startups and enterprises around the world to launch 350+ next-generation apps.",
                     location = "▽ Philadelphia, PA",
                     rating = 4.8
                 ),
@@ -66,7 +66,7 @@ sealed class Items :Parcelable {
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/letterhead_logo.jpg",
                     name = "AppUnite",
                     price = "\$25 - \$49 / hr",
-                    text = "AppUnite specializes in creating highly-usable applications for Android, iOS and web apps in Elixir and Phoenix, React, Vue.js.",
+                    descriptions = "AppUnite specializes in creating highly-usable applications for Android, iOS and web apps in Elixir and Phoenix, React, Vue.js.",
                     location = "▽ Poznan, Poland",
                     rating = 4.9
                 )
@@ -78,7 +78,7 @@ sealed class Items :Parcelable {
     data class Clients(
         val image: String,
         val name: String,
-        val text: String,
+        val descriptions: String,
         val rating: Double
     ) : Items() {
         companion object {

@@ -1,23 +1,27 @@
 package com.example.lists
 
 import android.annotation.SuppressLint
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.lists.databinding.ItemClientBinding
+import com.example.lists.databinding.ItemCompanyBinding
 
 class ItemAdapter(
     private val onItemClicked: (position: Int) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: List<Items> = emptyList()
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val companyBinding = ItemCompanyBinding.inflate(LayoutInflater.from(parent.context))
+        val clientsBinding = ItemClientBinding.inflate(LayoutInflater.from(parent.context))
         return when (viewType) {
-            TYPE_COMPANY -> CompanyHolder(parent.inflate(R.layout.item_company), onItemClicked)
-            TYPE_CLIENT -> ClientsHolder(parent.inflate(R.layout.item_client), onItemClicked)
+            TYPE_COMPANY -> CompanyHolder(companyBinding, onItemClicked)
+            TYPE_CLIENT -> ClientsHolder(clientsBinding, onItemClicked)
             else -> error("Incorrect item type")
         }
     }
@@ -50,12 +54,11 @@ class ItemAdapter(
         items = newCompany
     }
 
+
     abstract class BaseItemHolder(
         view: View,
         onItemClicked: (position: Int) -> Unit
     ) : RecyclerView.ViewHolder(view) {
-        private val nameTextView = view.findViewById<TextView>(R.id.companyName)
-        private val descriptionTextView = view.findViewById<TextView>(R.id.companyDescription)
 
         init {
             view.setOnClickListener {
@@ -64,56 +67,44 @@ class ItemAdapter(
 
         }
 
-        protected fun bindBaseInfo(
-            name: String,
-            text: String,
-        ) {
-            nameTextView.text = name
-            descriptionTextView.text = text
-        }
-
     }
 
     class CompanyHolder(
-        view: View,
+        private val binding: ItemCompanyBinding,
         onItemClicked: (position: Int) -> Unit
-    ) : BaseItemHolder(view, onItemClicked) {
-        private val priceTextView = view.findViewById<TextView>(R.id.companyPrice)
-        private val locationTextView = view.findViewById<TextView>(R.id.companyLocation)
-        private val imageView = view.findViewById<ImageView>(R.id.logoImage)
-        private val ratingTextView = view.findViewById<TextView>(R.id.companyRating)
+    ) : BaseItemHolder(binding.root, onItemClicked) {
 
         @SuppressLint("SetTextI18n")
         fun bind(item: Items.Company) {
-            bindBaseInfo(item.name, item.text)
-            priceTextView.text = item.price
-            locationTextView.text = item.location
-            ratingTextView.text = "Rating: ${item.rating}"
+            binding.companyName.text = item.name
+            binding.companyDescription.text = item.descriptions
+            binding.companyPrice.text = item.price
+            binding.companyLocation.text = item.location
+            binding.companyRating.text = "Rating: ${item.rating}"
             itemView.context.resources.getString(R.string.mercury_text)
             Glide.with(itemView)
                 .load(item.image)
                 .placeholder(R.drawable.resource_default)
-                .into(imageView)
+                .into(binding.logoImage)
         }
 
     }
 
     class ClientsHolder(
-        view: View,
+        private val binding: ItemClientBinding,
         onItemClicked: (position: Int) -> Unit
-    ) : BaseItemHolder(view, onItemClicked) {
-        private val imageView = view.findViewById<ImageView>(R.id.logoImage)
-        private val ratingTextView = view.findViewById<TextView>(R.id.companyRating)
+    ) : BaseItemHolder(binding.root, onItemClicked) {
 
         @SuppressLint("SetTextI18n")
         fun bind(item: Items.Clients) {
-            bindBaseInfo(item.name, item.text)
-            ratingTextView.text = "I give at: ${item.rating} stars"
+            binding.companyName.text = item.name
+            binding.companyDescription.text = item.descriptions
+            binding.companyRating.text = "I give at: ${item.rating} stars"
             Glide.with(itemView)
                 .load(item.image)
                 .apply(RequestOptions.circleCropTransform())
                 .placeholder(R.drawable.resource_default)
-                .into(imageView)
+                .into(binding.logoImage)
         }
     }
 
