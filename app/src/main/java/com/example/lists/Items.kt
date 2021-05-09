@@ -8,6 +8,7 @@ sealed class Items :Parcelable {
 
     @Parcelize
     data class Company(
+        var id: Long,
         val image: String,
         val name: String,
         val price: String,
@@ -18,6 +19,7 @@ sealed class Items :Parcelable {
         companion object {
             val reserveCompanyList = arrayListOf(
                 Company(
+                    id = 1,
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/3df13e745120719d5ba56f4876b8fa61.png",
                     name = "Mercury Development",
                     price = "\$50 - \$99 / hr",
@@ -25,6 +27,7 @@ sealed class Items :Parcelable {
                     location = "▽ Samara, Russia",
                     rating = 5.0
                 ), Company(
+                    id = 2,
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/magora_sign_200px-.png",
                     name = "Magora",
                     price = "\$50 - \$99 / hr",
@@ -32,6 +35,7 @@ sealed class Items :Parcelable {
                     location = "▽ St. Petersburg, Russia",
                     rating = 4.7
                 ), Company(
+                    id = 3,
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/158064806d43071503ff578e453d660c.png",
                     name = "Orangesoft",
                     price = "\$50 - \$99 / hr",
@@ -39,6 +43,7 @@ sealed class Items :Parcelable {
                     location = "▽ Moscow, Russia",
                     rating = 5.0
                 ), Company(
+                    id = 4,
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/17884187_10154220930360448_3201341747770140275_n.png",
                     name = "Andersen",
                     price = "\$25 - \$49 / hr",
@@ -47,6 +52,7 @@ sealed class Items :Parcelable {
                     rating = 4.9
                 ),
                 Company(
+                    id = 5,
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/profile_photo512.png",
                     name = "nomtek",
                     price = "\$50 - \$99 / hr",
@@ -55,6 +61,7 @@ sealed class Items :Parcelable {
                     rating = 4.9
                 ),
                 Company(
+                    id = 6,
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/5198bbb11bba925df59511218c449f4b.png",
                     name = "ChopDawg.com",
                     price = "$150 - $199 / hr",
@@ -63,6 +70,7 @@ sealed class Items :Parcelable {
                     rating = 4.8
                 ),
                 Company(
+                    id = 7,
                     image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/letterhead_logo.jpg",
                     name = "AppUnite",
                     price = "\$25 - \$49 / hr",
@@ -76,6 +84,7 @@ sealed class Items :Parcelable {
 
     @Parcelize
     data class Clients(
+        val id: Long,
         val image: String,
         val name: String,
         val descriptions: String,

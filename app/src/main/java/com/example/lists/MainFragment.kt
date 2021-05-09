@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.example.lists.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -19,14 +18,35 @@ class MainFragment : Fragment() {
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         val view = binding.root
+
         binding.linearButton.setOnClickListener {
             val listFragment = childFragmentManager.findFragmentById(R.id.container)
             val fragmentTransaction = childFragmentManager.beginTransaction()
-            val fragment = ListFragment()
+            val fragment = ListFragment.newInstance(1)
             if (listFragment == null) {
                 fragmentTransaction.add(R.id.container, fragment).commit()
             } else  {
-                fragmentTransaction.remove(fragment).commit()
+                fragmentTransaction.replace(R.id.container, fragment).commit()
+            }
+        }
+        binding.gridButton.setOnClickListener {
+            val listFragment = childFragmentManager.findFragmentById(R.id.container)
+            val fragmentTransaction = childFragmentManager.beginTransaction()
+            val fragment = ListFragment.newInstance(2)
+            if (listFragment == null) {
+                fragmentTransaction.add(R.id.container, fragment).commit()
+            } else {
+                fragmentTransaction.replace(R.id.container, fragment).commit()
+            }
+        }
+        binding.staggeredGridButton.setOnClickListener {
+            val listFragment = childFragmentManager.findFragmentById(R.id.container)
+            val fragmentTransaction = childFragmentManager.beginTransaction()
+            val fragment = ListFragment.newInstance(3)
+            if (listFragment == null) {
+                fragmentTransaction.add(R.id.container, fragment).commit()
+            } else {
+                fragmentTransaction.replace(R.id.container, fragment).commit()
             }
         }
 

@@ -5,8 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.lists.adapters.ItemAdapter
 import com.example.lists.databinding.FragmentListBinding
+import kotlin.random.Random
 
 
 class ListFragment : Fragment(), FragmentOnClickListener,
@@ -15,6 +19,7 @@ class ListFragment : Fragment(), FragmentOnClickListener,
     private val binding get() = _binding!!
     private var itemAdapter by AutoClearedValue<ItemAdapter>(this)
     private var companyArrayList = arrayListOf<Items>()
+    private var typeLayoutManager = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,31 +31,47 @@ class ListFragment : Fragment(), FragmentOnClickListener,
         if (savedInstanceState != null) {
             companyArrayList = (savedInstanceState.getParcelableArrayList("LIST_KEY")!!)
         }
-        initList()
+        typeLayoutManager = requireArguments().getInt(KEY_TYPE)
+        initList(typeLayoutManager)
         emptyScreenMessage()
         binding.addReviewFAB.setOnClickListener {
             showAddItemDialog()
         }
         itemAdapter.updateCompany(companyArrayList)
-        itemAdapter.notifyDataSetChanged()
         return view
     }
 
-    private fun initList() {
+    private fun initList(typeInt: Int) {
         itemAdapter = ItemAdapter { position -> deleteItem(position) }
         with(binding.companyList) {
             adapter = itemAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
+            when (typeInt) {
+                1 -> {
+                    layoutManager = LinearLayoutManager(requireContext())
+                    setHasFixedSize(true)
+                }
+                2 -> {
+                    layoutManager = GridLayoutManager(requireContext(), 2)
+                    setHasFixedSize(true)
+                }
+                3 -> {
+                    layoutManager =
+                        StaggeredGridLayoutManager(
+                            2,
+                            StaggeredGridLayoutManager.HORIZONTAL
+                        )
+                    setHasFixedSize(true)
+                }
+            }
         }
     }
 
     fun addCompany() {
         val reserveCompany = Items.Company.reserveCompanyList.random()
+        reserveCompany.id = Random.nextLong()
         companyArrayList = (arrayListOf(reserveCompany) + companyArrayList) as ArrayList<Items>
         emptyScreenMessage()
         itemAdapter.updateCompany(companyArrayList)
-        itemAdapter.notifyItemInserted(0)
         binding.companyList.scrollToPosition(0)
 
     }
@@ -60,7 +81,6 @@ class ListFragment : Fragment(), FragmentOnClickListener,
             companyArrayList.filterIndexed { index, _ -> index != position } as ArrayList<Items>
         emptyScreenMessage()
         itemAdapter.updateCompany(companyArrayList)
-        itemAdapter.notifyItemRemoved(position)
     }
 
     private fun showAddItemDialog() {
@@ -82,10 +102,11 @@ class ListFragment : Fragment(), FragmentOnClickListener,
 
     override fun onFragmentClick(data: Any, data2: Any, data3: Any) {
         val newReview = Items.Clients(
-            Items.Clients.avatars.random(),
-            data as String,
-            data2 as String,
-            data3 as Double
+            id = Random.nextLong(),
+            image = Items.Clients.avatars.random(),
+            name = data as String,
+            descriptions = data2 as String,
+            rating = data3 as Double
         )
         var randomPosition = 0
         if (companyArrayList.size >= 1) {
@@ -96,7 +117,6 @@ class ListFragment : Fragment(), FragmentOnClickListener,
         companyArrayList = mutableList as ArrayList<Items>
         emptyScreenMessage()
         itemAdapter.updateCompany(companyArrayList)
-        itemAdapter.notifyItemInserted(randomPosition)
         binding.companyList.scrollToPosition(randomPosition)
     }
 
@@ -107,5 +127,18 @@ class ListFragment : Fragment(), FragmentOnClickListener,
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList("LIST_KEY", companyArrayList)
+    }
+
+    companion object {
+        private const val KEY_TYPE = "type"
+        fun newInstance(
+            typeInt: Int
+        ): ListFragment {
+            return ListFragment().withArguments {
+                putInt(KEY_TYPE, typeInt)
+            }
+        }
+
+
     }
 }
