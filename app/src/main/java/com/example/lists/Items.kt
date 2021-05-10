@@ -99,6 +99,22 @@ sealed class Items :Parcelable {
             )
         }
     }
+
+    @Parcelize
+    data class CompanySquare(
+        var id: Long,
+        val image: String,
+        val name: String,
+        val rating: Double
+    ) : Items()
+
+    @Parcelize
+    data class ClientsSquare(
+        val id: Long,
+        val image: String,
+        val name: String,
+        val rating: Double
+    ) : Items()
 }
 
 

@@ -5,11 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.lists.adapters.ItemAdapter
 import com.example.lists.databinding.FragmentListBinding
+import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator
 import kotlin.random.Random
 
 
@@ -32,7 +31,7 @@ class ListFragment : Fragment(), FragmentOnClickListener,
             companyArrayList = (savedInstanceState.getParcelableArrayList("LIST_KEY")!!)
         }
         typeLayoutManager = requireArguments().getInt(KEY_TYPE)
-        initList(typeLayoutManager)
+        initList()
         emptyScreenMessage()
         binding.addReviewFAB.setOnClickListener {
             showAddItemDialog()
@@ -41,28 +40,13 @@ class ListFragment : Fragment(), FragmentOnClickListener,
         return view
     }
 
-    private fun initList(typeInt: Int) {
+    private fun initList() {
         itemAdapter = ItemAdapter { position -> deleteItem(position) }
         with(binding.companyList) {
             adapter = itemAdapter
-            when (typeInt) {
-                1 -> {
-                    layoutManager = LinearLayoutManager(requireContext())
-                    setHasFixedSize(true)
-                }
-                2 -> {
-                    layoutManager = GridLayoutManager(requireContext(), 2)
-                    setHasFixedSize(true)
-                }
-                3 -> {
-                    layoutManager =
-                        StaggeredGridLayoutManager(
-                            2,
-                            StaggeredGridLayoutManager.HORIZONTAL
-                        )
-                    setHasFixedSize(true)
-                }
-            }
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
+            itemAnimator = OvershootInLeftAnimator()
         }
     }
 

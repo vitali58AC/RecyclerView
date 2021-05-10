@@ -11,6 +11,8 @@ class ItemAdapter(
     init {
         delegatesManager.addDelegate(CompanyAdapterDelegate(onItemClicked))
             .addDelegate(ClientsAdapterDelegate(onItemClicked))
+            .addDelegate(CompanySquareAdapterDelegate(onItemClicked))
+            .addDelegate(ClientsSquareAdapterDelegate(onItemClicked))
     }
 
     fun updateCompany(newCompany: List<Items>) {

@@ -6,24 +6,22 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.example.lists.Items
 import com.example.lists.R
-import com.example.lists.databinding.ItemCompanyBinding
+import com.example.lists.databinding.ItemCompanySquareBinding
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 
-class CompanyAdapterDelegate(
+class CompanySquareAdapterDelegate(
     private val onItemClicked: (position: Int) -> Unit
-) : AbsListItemAdapterDelegate<Items.Company, Items, CompanyAdapterDelegate.CompanyHolder>() {
+) :
+    AbsListItemAdapterDelegate<Items.CompanySquare, Items, CompanySquareAdapterDelegate.CompanyHolder>() {
 
     class CompanyHolder(
-        private val binding: ItemCompanyBinding,
+        private val binding: ItemCompanySquareBinding,
         onItemClicked: (position: Int) -> Unit
     ) : BaseItemHolder(binding.root, onItemClicked) {
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: Items.Company) {
+        fun bind(item: Items.CompanySquare) {
             binding.companyName.text = item.name
-            binding.companyDescription.text = item.descriptions
-            binding.companyPrice.text = item.price
-            binding.companyLocation.text = item.location
             binding.companyRating.text = "Rating: ${item.rating}"
             itemView.context.resources.getString(R.string.mercury_text)
             Glide.with(itemView)
@@ -35,16 +33,16 @@ class CompanyAdapterDelegate(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup): CompanyHolder {
-        val companyBinding = ItemCompanyBinding.inflate(LayoutInflater.from(parent.context))
+        val companyBinding = ItemCompanySquareBinding.inflate(LayoutInflater.from(parent.context))
         return CompanyHolder(companyBinding, onItemClicked)
     }
 
     override fun isForViewType(item: Items, items: MutableList<Items>, position: Int): Boolean {
-        return item is Items.Company
+        return item is Items.CompanySquare
     }
 
     override fun onBindViewHolder(
-        item: Items.Company,
+        item: Items.CompanySquare,
         holder: CompanyHolder,
         payloads: MutableList<Any>
     ) {

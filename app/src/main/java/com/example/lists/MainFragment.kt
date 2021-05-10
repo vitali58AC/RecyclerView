@@ -25,14 +25,14 @@ class MainFragment : Fragment() {
             val fragment = ListFragment.newInstance(1)
             if (listFragment == null) {
                 fragmentTransaction.add(R.id.container, fragment).commit()
-            } else  {
+            } else {
                 fragmentTransaction.replace(R.id.container, fragment).commit()
             }
         }
         binding.gridButton.setOnClickListener {
             val listFragment = childFragmentManager.findFragmentById(R.id.container)
             val fragmentTransaction = childFragmentManager.beginTransaction()
-            val fragment = ListFragment.newInstance(2)
+            val fragment = GridFragment()
             if (listFragment == null) {
                 fragmentTransaction.add(R.id.container, fragment).commit()
             } else {
@@ -42,7 +42,7 @@ class MainFragment : Fragment() {
         binding.staggeredGridButton.setOnClickListener {
             val listFragment = childFragmentManager.findFragmentById(R.id.container)
             val fragmentTransaction = childFragmentManager.beginTransaction()
-            val fragment = ListFragment.newInstance(3)
+            val fragment = StaggeredFragment()
             if (listFragment == null) {
                 fragmentTransaction.add(R.id.container, fragment).commit()
             } else {
@@ -60,6 +60,7 @@ class MainFragment : Fragment() {
         }
 
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
