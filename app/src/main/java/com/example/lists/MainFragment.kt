@@ -58,7 +58,6 @@ class MainFragment : Fragment() {
         if (fragment is ListFragment) {
             fragment.addCompany()
         }
-
     }
 
     override fun onDestroy() {

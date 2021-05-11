@@ -14,6 +14,7 @@ class CompanySquareAdapterDelegate(
 ) :
     AbsListItemAdapterDelegate<Items.CompanySquare, Items, CompanySquareAdapterDelegate.CompanyHolder>() {
 
+
     class CompanyHolder(
         private val binding: ItemCompanySquareBinding,
         onItemClicked: (position: Int) -> Unit

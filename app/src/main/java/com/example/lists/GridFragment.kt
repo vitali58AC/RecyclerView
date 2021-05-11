@@ -6,12 +6,12 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.ScaleAnimation
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.lists.Constant.VIEW_TYPE_ITEM
+import com.example.lists.Constant.VIEW_TYPE_LOADING
 import com.example.lists.adapters.ItemAdapter
 import com.example.lists.databinding.FragmentGridBinding
 import jp.wasabeef.recyclerview.animators.LandingAnimator
@@ -81,8 +81,10 @@ class GridFragment : Fragment() {
             rating = 4.9
         )
     )
-    private var isLoading: Boolean = false
 
+    private lateinit var loadMoreItemsCells: ArrayList<Items?>
+    private lateinit var scrollListener: RecyclerViewLoadMoreScroll
+    private lateinit var mLayoutManager: RecyclerView.LayoutManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,7 +97,10 @@ class GridFragment : Fragment() {
             companyArrayList = (savedInstanceState.getParcelableArrayList("LIST_KEY")!!)
         }
         initList()
-        initScrollListener()
+        //** Set the Layout Manager of the RecyclerView
+        //  setRVLayoutManager()
+        //** Set the scrollListener of the RecyclerView
+        //setRVScrollListener()
         itemAdapter.updateCompany(companyArrayList)
         return view
     }
@@ -123,46 +128,81 @@ class GridFragment : Fragment() {
 
     }
 
-    private fun initScrollListener() {
-        binding.companyList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) {
-                    val gridLayoutManager = binding.companyList.layoutManager as GridLayoutManager?
-                    val visiballCount = gridLayoutManager?.findLastCompletelyVisibleItemPosition()
-                        ?.plus(1)
-                    if (visiballCount == gridLayoutManager?.itemCount) {
-                        loadMore()
-                    }
-                }
-                /*
-                if (!isLoading) {
-                    if (gridLayoutManager != null && gridLayoutManager.findLastCompletelyVisibleItemPosition() == companyArrayList.size - 1) {
-                        loadMore()
-                        isLoading = true
-                    }
-                }*/
+    private fun loadMoreData() {
+        //Add the Loading View
+        itemAdapter.addLoadingView()
+        //Create the loadMoreItemsCells Arraylist
+        loadMoreItemsCells = ArrayList()
+        //Get the number of the current Items of the main Arraylist
+        val start = itemAdapter.itemCount
+        //Load 16 more items
+        val end = start + 16
+        //Use Handler if the items are loading too fast.
+        //If you remove it, the data will load so fast that you can't even see the LoadingView
+        Handler(Looper.getMainLooper()).postDelayed({
+            for (i in start..end) {
+                //Get data and add them to loadMoreItemsCells ArrayList
+                loadMoreItemsCells.add(companyArrayList.random())
             }
-        })
+            //Remove the Loading View
+            itemAdapter.removeLoadingView()
+            //We adding the data to our main ArrayList
+            itemAdapter.addData(loadMoreItemsCells)
+            //Change the boolean isLoading to false
+            scrollListener.setLoaded()
+            //Update the recyclerView in the main thread
+            binding.companyList.post {
+                itemAdapter.notifyDataSetChanged()
+            }
+        }, 3000)
+
     }
 
-    private fun loadMore() {
-//        companyArrayList += companyArrayList
-//        itemAdapter.notifyItemInserted(companyArrayList.size - 1)
-        val handler = Handler()
-        Handler(Looper.getMainLooper()).postDelayed({
-            companyArrayList.removeAt(companyArrayList.size - 1)
-            val scrollPosition = companyArrayList.size
-            var currentSize = scrollPosition
-            val nextLimit = currentSize + 100
-            while (currentSize - 1 < nextLimit) {
-            companyArrayList.add(companyArrayList.random())
-            currentSize++
+    private fun setRVLayoutManager() {
+        mLayoutManager = GridLayoutManager(requireContext(), 2)
+        itemAdapter = ItemAdapter { position -> deleteItem(position) }
+        with(binding.companyList) {
+            adapter = itemAdapter
+            addItemDecoration(
+                DividerItemDecoration(
+                    requireContext(),
+                    DividerItemDecoration.VERTICAL
+                )
+            )
+            addItemDecoration(
+                DividerItemDecoration(
+                    requireContext(),
+                    DividerItemDecoration.HORIZONTAL
+                )
+            )
+            layoutManager = mLayoutManager
+            (mLayoutManager as GridLayoutManager).spanSizeLookup =
+                object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return when (itemAdapter.getItemViewType(position)) {
+                            VIEW_TYPE_ITEM -> 1
+                            VIEW_TYPE_LOADING -> 2 //number of columns of the grid
+                            else -> -1
+                        }
+                    }
+                }
+            setHasFixedSize(true)
+            itemAnimator = LandingAnimator()
         }
-            isLoading = false
-        }, 2000)
-}
 
+    }
+
+    private fun setRVScrollListener() {
+        scrollListener = RecyclerViewLoadMoreScroll(mLayoutManager as GridLayoutManager)
+        scrollListener.setOnLoadMoreListener(object :
+            OnLoadMoreListener {
+            override fun onLoadMore() {
+                loadMoreData()
+            }
+        })
+
+        binding.companyList.addOnScrollListener(scrollListener)
+    }
 
     private fun deleteItem(position: Int) {
         companyArrayList =
