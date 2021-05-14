@@ -6,6 +6,9 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import by.kirich1409.viewbindingdelegate.CreateMethod
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.lists.databinding.DialogReviewBinding
 
 class ClientDialogFragment : DialogFragment() {
     private val parentListener by lazy {
@@ -14,21 +17,21 @@ class ClientDialogFragment : DialogFragment() {
     private val neutralListener by lazy {
         parentFragment as? NeutralOnClickListener
     }
+    private val binding:DialogReviewBinding by viewBinding(CreateMethod.INFLATE)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())
-        val view = activity?.layoutInflater?.inflate(R.layout.dialog_review, null)
+        val view = binding.root
         var rate = 0.0
-        val spinner = view?.findViewById<Spinner>(R.id.spinner)
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.number_array,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner?.adapter = adapter
+            binding.spinner.adapter = adapter
         }
-        spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -50,9 +53,11 @@ class ClientDialogFragment : DialogFragment() {
         }
         builder.setView(view)
         builder.setPositiveButton("Add review") { _, _ ->
-            val inputName = dialog?.findViewById<EditText>(R.id.inputName)?.text.toString()
-            val inputReview = dialog?.findViewById<EditText>(R.id.inputReview)?.text.toString()
-            parentListener?.onFragmentClick(inputName, inputReview, rate)
+            parentListener?.onFragmentClick(
+                binding.inputName.text.toString(),
+                binding.inputReview.text.toString(),
+                rate
+            )
         }
         builder.setNeutralButton("Add random company") { _, _ -> neutralListener?.onFragmentClick() }
         builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }

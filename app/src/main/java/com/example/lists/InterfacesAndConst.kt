@@ -17,6 +17,9 @@ interface OnLoadMoreListener {
 }
 
 object Constant {
-    const val VIEW_TYPE_ITEM = 0
-    const val VIEW_TYPE_LOADING = 1
+    const val VIEW_TYPE_COMPANY = 1
+    const val VIEW_TYPE_COMPANY_SQUARE = 2
+    const val VIEW_TYPE_CLIENTS = 3
+    const val VIEW_TYPE_CLIENTS_SQUARE = 4
+    const val VIEW_TYPE_LOADING = 0
 }

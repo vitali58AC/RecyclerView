@@ -3,18 +3,24 @@ package com.example.lists
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.lists.Constant.VIEW_TYPE_ITEM
+import com.example.lists.Constant.VIEW_TYPE_CLIENTS
+import com.example.lists.Constant.VIEW_TYPE_CLIENTS_SQUARE
+import com.example.lists.Constant.VIEW_TYPE_COMPANY
+import com.example.lists.Constant.VIEW_TYPE_COMPANY_SQUARE
 import com.example.lists.Constant.VIEW_TYPE_LOADING
 import com.example.lists.adapters.ItemAdapter
 import com.example.lists.databinding.FragmentGridBinding
 import jp.wasabeef.recyclerview.animators.LandingAnimator
+import kotlin.random.Random
 
 
 class GridFragment : Fragment() {
@@ -96,11 +102,14 @@ class GridFragment : Fragment() {
         if (savedInstanceState != null) {
             companyArrayList = (savedInstanceState.getParcelableArrayList("LIST_KEY")!!)
         }
-        initList()
+//        initList()
         //** Set the Layout Manager of the RecyclerView
-        //  setRVLayoutManager()
+        Log.e("testBug","Сейчас всё ок до первого вызова")
+            setRVLayoutManager()
+        Log.e("testBug","Сейчас всё ок после вызова менеджера слоёв")
         //** Set the scrollListener of the RecyclerView
-        //setRVScrollListener()
+        setRVScrollListener()
+        Log.e("testBug","Сейчас всё ок после скролл листенера")
         itemAdapter.updateCompany(companyArrayList)
         return view
     }
@@ -110,15 +119,19 @@ class GridFragment : Fragment() {
         with(binding.companyList) {
             adapter = itemAdapter
             addItemDecoration(
-                DividerItemDecoration(
-                    requireContext(),
-                    DividerItemDecoration.VERTICAL
+                DividerItemDecoratorHorizontal(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.divider
+                    )
                 )
             )
             addItemDecoration(
-                DividerItemDecoration(
-                    requireContext(),
-                    DividerItemDecoration.HORIZONTAL
+                DividerItemDecoratorVertical(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.divider
+                    )
                 )
             )
             layoutManager = GridLayoutManager(requireContext(), 2)
@@ -129,6 +142,7 @@ class GridFragment : Fragment() {
     }
 
     private fun loadMoreData() {
+        Log.e("tag", "load more data starting")
         //Add the Loading View
         itemAdapter.addLoadingView()
         //Create the loadMoreItemsCells Arraylist
@@ -142,7 +156,12 @@ class GridFragment : Fragment() {
         Handler(Looper.getMainLooper()).postDelayed({
             for (i in start..end) {
                 //Get data and add them to loadMoreItemsCells ArrayList
-                loadMoreItemsCells.add(companyArrayList.random())
+                loadMoreItemsCells.add(Items.CompanySquare(
+                    id = Random.nextLong(),
+                    image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/letterhead_logo.jpg",
+                    name = "AppUnite",
+                    rating = 4.9
+                ))
             }
             //Remove the Loading View
             itemAdapter.removeLoadingView()
@@ -152,7 +171,7 @@ class GridFragment : Fragment() {
             scrollListener.setLoaded()
             //Update the recyclerView in the main thread
             binding.companyList.post {
-                itemAdapter.notifyDataSetChanged()
+                //itemAdapter.notifyDataSetChanged()
             }
         }, 3000)
 
@@ -176,16 +195,9 @@ class GridFragment : Fragment() {
                 )
             )
             layoutManager = mLayoutManager
-            (mLayoutManager as GridLayoutManager).spanSizeLookup =
-                object : GridLayoutManager.SpanSizeLookup() {
-                    override fun getSpanSize(position: Int): Int {
-                        return when (itemAdapter.getItemViewType(position)) {
-                            VIEW_TYPE_ITEM -> 1
-                            VIEW_TYPE_LOADING -> 2 //number of columns of the grid
-                            else -> -1
-                        }
-                    }
-                }
+            Log.e("tag","Дошло до присвоения layoutManager к новому")
+
+            Log.e("tag", "Finish init adapter")
             setHasFixedSize(true)
             itemAnimator = LandingAnimator()
         }
@@ -203,7 +215,6 @@ class GridFragment : Fragment() {
 
         binding.companyList.addOnScrollListener(scrollListener)
     }
-
     private fun deleteItem(position: Int) {
         companyArrayList =
             companyArrayList.filterIndexed { index, _ -> index != position } as ArrayList<Items>

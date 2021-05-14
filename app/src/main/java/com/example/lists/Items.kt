@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 
-sealed class Items :Parcelable {
+sealed class Items : Parcelable {
 
     @Parcelize
     data class Company(
@@ -114,6 +114,11 @@ sealed class Items :Parcelable {
         val image: String,
         val name: String,
         val rating: Double
+    ) : Items()
+
+    @Parcelize
+    data class Loading(
+        val id: Long
     ) : Items()
 }
 

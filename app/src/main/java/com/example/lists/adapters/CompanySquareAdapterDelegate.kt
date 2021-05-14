@@ -1,6 +1,5 @@
 package com.example.lists.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
@@ -20,11 +19,10 @@ class CompanySquareAdapterDelegate(
         onItemClicked: (position: Int) -> Unit
     ) : BaseItemHolder(binding.root, onItemClicked) {
 
-        @SuppressLint("SetTextI18n")
         fun bind(item: Items.CompanySquare) {
             binding.companyName.text = item.name
-            binding.companyRating.text = "Rating: ${item.rating}"
-            itemView.context.resources.getString(R.string.mercury_text)
+            binding.companyRating.text =
+                itemView.context.resources.getString(R.string.rate_is, item.rating)
             Glide.with(itemView)
                 .load(item.image)
                 .placeholder(R.drawable.resource_default)

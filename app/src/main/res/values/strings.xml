@@ -23,4 +23,6 @@
         <item>4.0</item>
         <item>5.0</item>
     </string-array>
+    <string name="give_rate">I give at: %1$.1f stars</string>
+    <string name="rate_is">Rating: %1$.1f</string>
 </resources>

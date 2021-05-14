@@ -1,7 +1,10 @@
 package com.example.lists.adapters
 
+import android.content.ClipData
 import android.os.Handler
+import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
+import com.example.lists.Constant
 import com.example.lists.Items
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 
@@ -10,8 +13,9 @@ class ItemAdapter(
 ) : AsyncListDifferDelegationAdapter<Items>(ItemsDiffUtilCallback()) {
 
     fun addData(dataViews: ArrayList<Items?>) {
-        this.differ.currentList.addAll(dataViews)
-        notifyDataSetChanged()
+        val temporaryList = differ.currentList + dataViews
+        this.differ.submitList(temporaryList)
+        //notifyDataSetChanged()
     }
 
     fun getItemAtPosition(position: Int): Items? {
@@ -21,24 +25,45 @@ class ItemAdapter(
     fun addLoadingView() {
         //Add loading item
         Handler().post {
-            differ.currentList.add(null)
-            notifyItemInserted(differ.currentList.size - 1)
+            val temporaryList = differ.currentList + null
+            differ.submitList(temporaryList)
+            //notifyItemInserted(differ.currentList.size - 1)
         }
     }
 
     fun removeLoadingView() {
         //Remove loading item
         if (differ.currentList.size != 0) {
-            differ.currentList.removeAt(differ.currentList.size - 1)
-            notifyItemRemoved(differ.currentList.size)
+            val temporaryList =
+                differ.currentList - null
+            differ.submitList(temporaryList)
+            //notifyItemRemoved(differ.currentList.size)
         }
     }
+
+  /*  override fun getItemViewType(position: Int): Int {
+        return when (differ.currentList[position]) {
+            is Items.Loading -> Constant.VIEW_TYPE_LOADING
+            is Items.Company -> Constant.VIEW_TYPE_COMPANY
+            is Items.CompanySquare -> Constant.VIEW_TYPE_COMPANY_SQUARE
+            is Items.Clients -> Constant.VIEW_TYPE_CLIENTS
+            is Items.ClientsSquare -> Constant.VIEW_TYPE_CLIENTS_SQUARE
+
+
+        }
+   *//*     return if (differ.currentList[position] == null) {
+            Constant.VIEW_TYPE_LOADING
+        } else {
+            Constant.VIEW_TYPE_ITEM
+        }*//*
+    }*/
 
     init {
         delegatesManager.addDelegate(CompanyAdapterDelegate(onItemClicked))
             .addDelegate(ClientsAdapterDelegate(onItemClicked))
             .addDelegate(CompanySquareAdapterDelegate(onItemClicked))
             .addDelegate(ClientsSquareAdapterDelegate(onItemClicked))
+            .addDelegate(LoadingAdapterDelegate(onItemClicked))
     }
 
 

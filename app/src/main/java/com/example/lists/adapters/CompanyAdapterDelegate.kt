@@ -1,6 +1,6 @@
 package com.example.lists.adapters
 
-import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
@@ -18,18 +18,19 @@ class CompanyAdapterDelegate(
         onItemClicked: (position: Int) -> Unit
     ) : BaseItemHolder(binding.root, onItemClicked) {
 
-        @SuppressLint("SetTextI18n")
         fun bind(item: Items.Company) {
             binding.companyName.text = item.name
             binding.companyDescription.text = item.descriptions
             binding.companyPrice.text = item.price
             binding.companyLocation.text = item.location
-            binding.companyRating.text = "Rating: ${item.rating}"
-            itemView.context.resources.getString(R.string.mercury_text)
+            binding.companyRating.text =
+                itemView.context.resources.getString(R.string.rate_is, item.rating)
             Glide.with(itemView)
                 .load(item.image)
                 .placeholder(R.drawable.resource_default)
                 .into(binding.logoImage)
+            Log.e("tag", "bind")
+
         }
 
     }
@@ -48,6 +49,7 @@ class CompanyAdapterDelegate(
         holder: CompanyHolder,
         payloads: MutableList<Any>
     ) {
+        Log.e("tag", "onBindViewHolder")
         holder.bind(item)
     }
 }

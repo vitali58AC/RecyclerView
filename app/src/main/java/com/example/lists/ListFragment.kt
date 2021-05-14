@@ -1,11 +1,11 @@
 package com.example.lists
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.CreateMethod
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.lists.adapters.ItemAdapter
 import com.example.lists.databinding.FragmentListBinding
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator
@@ -14,8 +14,7 @@ import kotlin.random.Random
 
 class ListFragment : Fragment(), FragmentOnClickListener,
     NeutralOnClickListener {
-    private var _binding: FragmentListBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentListBinding by viewBinding(CreateMethod.INFLATE)
     private var itemAdapter by AutoClearedValue<ItemAdapter>(this)
     private var companyArrayList = arrayListOf<Items>()
     private var typeLayoutManager = 0
@@ -25,7 +24,6 @@ class ListFragment : Fragment(), FragmentOnClickListener,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentListBinding.inflate(inflater, container, false)
         val view = binding.root
         if (savedInstanceState != null) {
             companyArrayList = (savedInstanceState.getParcelableArrayList("LIST_KEY")!!)
@@ -77,11 +75,6 @@ class ListFragment : Fragment(), FragmentOnClickListener,
         } else {
             binding.emptyRecyclerViewMessage.visibility = View.GONE
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     override fun onFragmentClick(data: Any, data2: Any, data3: Any) {
