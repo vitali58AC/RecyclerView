@@ -1,5 +1,6 @@
 package com.example.lists
 
+import android.content.ClipData
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.accessibility.AccessibilityViewCommand
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
@@ -88,7 +90,7 @@ class GridFragment : Fragment() {
         )
     )
 
-    private lateinit var loadMoreItemsCells: ArrayList<Items?>
+    private lateinit var loadMoreItemsCells: MutableList<Items>
     private lateinit var scrollListener: RecyclerViewLoadMoreScroll
     private lateinit var mLayoutManager: RecyclerView.LayoutManager
 
@@ -102,66 +104,23 @@ class GridFragment : Fragment() {
         if (savedInstanceState != null) {
             companyArrayList = (savedInstanceState.getParcelableArrayList("LIST_KEY")!!)
         }
-//        initList()
-        //** Set the Layout Manager of the RecyclerView
-        Log.e("testBug","Сейчас всё ок до первого вызова")
-            setRVLayoutManager()
-        Log.e("testBug","Сейчас всё ок после вызова менеджера слоёв")
-        //** Set the scrollListener of the RecyclerView
+        setRVLayoutManager()
         setRVScrollListener()
-        Log.e("testBug","Сейчас всё ок после скролл листенера")
         itemAdapter.updateCompany(companyArrayList)
         return view
     }
 
-    private fun initList() {
-        itemAdapter = ItemAdapter { position -> deleteItem(position) }
-        with(binding.companyList) {
-            adapter = itemAdapter
-            addItemDecoration(
-                DividerItemDecoratorHorizontal(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.divider
-                    )
-                )
-            )
-            addItemDecoration(
-                DividerItemDecoratorVertical(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.divider
-                    )
-                )
-            )
-            layoutManager = GridLayoutManager(requireContext(), 2)
-            setHasFixedSize(true)
-            itemAnimator = LandingAnimator()
-        }
-
-    }
-
     private fun loadMoreData() {
-        Log.e("tag", "load more data starting")
-        //Add the Loading View
         itemAdapter.addLoadingView()
-        //Create the loadMoreItemsCells Arraylist
-        loadMoreItemsCells = ArrayList()
-        //Get the number of the current Items of the main Arraylist
+        loadMoreItemsCells = mutableListOf<Items>()
         val start = itemAdapter.itemCount
         //Load 16 more items
         val end = start + 16
-        //Use Handler if the items are loading too fast.
-        //If you remove it, the data will load so fast that you can't even see the LoadingView
         Handler(Looper.getMainLooper()).postDelayed({
             for (i in start..end) {
-                //Get data and add them to loadMoreItemsCells ArrayList
-                loadMoreItemsCells.add(Items.CompanySquare(
-                    id = Random.nextLong(),
-                    image = "https://img.shgstatic.com/clutchco-static/image/scale/65x65/s3fs-public/logos/letterhead_logo.jpg",
-                    name = "AppUnite",
-                    rating = 4.9
-                ))
+                loadMoreItemsCells.add(
+                    companyArrayList.random()
+                )
             }
             //Remove the Loading View
             itemAdapter.removeLoadingView()
@@ -183,19 +142,23 @@ class GridFragment : Fragment() {
         with(binding.companyList) {
             adapter = itemAdapter
             addItemDecoration(
-                DividerItemDecoration(
-                    requireContext(),
-                    DividerItemDecoration.VERTICAL
+                DividerItemDecoratorHorizontal(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.divider
+                    )
                 )
             )
             addItemDecoration(
-                DividerItemDecoration(
-                    requireContext(),
-                    DividerItemDecoration.HORIZONTAL
+                DividerItemDecoratorVertical(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.divider
+                    )
                 )
             )
             layoutManager = mLayoutManager
-            Log.e("tag","Дошло до присвоения layoutManager к новому")
+            Log.e("tag", "Дошло до присвоения layoutManager к новому")
 
             Log.e("tag", "Finish init adapter")
             setHasFixedSize(true)
@@ -215,6 +178,7 @@ class GridFragment : Fragment() {
 
         binding.companyList.addOnScrollListener(scrollListener)
     }
+
     private fun deleteItem(position: Int) {
         companyArrayList =
             companyArrayList.filterIndexed { index, _ -> index != position } as ArrayList<Items>

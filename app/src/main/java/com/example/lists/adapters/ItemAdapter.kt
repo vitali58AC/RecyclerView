@@ -1,10 +1,8 @@
 package com.example.lists.adapters
 
-import android.content.ClipData
 import android.os.Handler
-import android.util.Log
+import android.os.Looper
 import androidx.recyclerview.widget.DiffUtil
-import com.example.lists.Constant
 import com.example.lists.Items
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 
@@ -12,46 +10,48 @@ class ItemAdapter(
     onItemClicked: (position: Int) -> Unit
 ) : AsyncListDifferDelegationAdapter<Items>(ItemsDiffUtilCallback()) {
 
-    fun addData(dataViews: ArrayList<Items?>) {
-        val temporaryList = differ.currentList + dataViews
+    fun addData(dataViews: MutableList<Items>) {
+        val temporaryList:MutableList<Items> = mutableListOf()
+        temporaryList.addAll(differ.currentList)
+        temporaryList.addAll(dataViews)
         this.differ.submitList(temporaryList)
         //notifyDataSetChanged()
     }
 
-    fun getItemAtPosition(position: Int): Items? {
-        return differ.currentList[position]
-    }
 
     fun addLoadingView() {
         //Add loading item
-        Handler().post {
-            val temporaryList = differ.currentList + null
+        Handler(Looper.getMainLooper()).post {
+            val temporaryList:MutableList<Items> = mutableListOf()
+            temporaryList.addAll(differ.currentList)
+            temporaryList.add(Items.Loading(999))
             differ.submitList(temporaryList)
-            //notifyItemInserted(differ.currentList.size - 1)
+//            notifyItemInserted(differ.currentList.size - 1)
         }
     }
 
     fun removeLoadingView() {
         //Remove loading item
         if (differ.currentList.size != 0) {
-            val temporaryList =
-                differ.currentList - null
+            val temporaryList:MutableList<Items> = mutableListOf()
+            temporaryList.addAll(differ.currentList)
+            temporaryList.removeAt(differ.currentList.size - 1)
             differ.submitList(temporaryList)
             //notifyItemRemoved(differ.currentList.size)
         }
     }
 
-  /*  override fun getItemViewType(position: Int): Int {
-        return when (differ.currentList[position]) {
-            is Items.Loading -> Constant.VIEW_TYPE_LOADING
-            is Items.Company -> Constant.VIEW_TYPE_COMPANY
-            is Items.CompanySquare -> Constant.VIEW_TYPE_COMPANY_SQUARE
-            is Items.Clients -> Constant.VIEW_TYPE_CLIENTS
-            is Items.ClientsSquare -> Constant.VIEW_TYPE_CLIENTS_SQUARE
+    /*  override fun getItemViewType(position: Int): Int {
+          return when (differ.currentList[position]) {
+              is Items.Loading -> Constant.VIEW_TYPE_LOADING
+              is Items.Company -> Constant.VIEW_TYPE_COMPANY
+              is Items.CompanySquare -> Constant.VIEW_TYPE_COMPANY_SQUARE
+              is Items.Clients -> Constant.VIEW_TYPE_CLIENTS
+              is Items.ClientsSquare -> Constant.VIEW_TYPE_CLIENTS_SQUARE
 
 
-        }
-   *//*     return if (differ.currentList[position] == null) {
+          }
+     *//*     return if (differ.currentList[position] == null) {
             Constant.VIEW_TYPE_LOADING
         } else {
             Constant.VIEW_TYPE_ITEM
