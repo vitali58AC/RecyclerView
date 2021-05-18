@@ -8,6 +8,9 @@ import com.example.lists.Items
 import com.example.lists.R
 import com.example.lists.databinding.ItemCompanyBinding
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
+import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 
 class CompanyAdapterDelegate(
     private val onItemClicked: (position: Int) -> Unit

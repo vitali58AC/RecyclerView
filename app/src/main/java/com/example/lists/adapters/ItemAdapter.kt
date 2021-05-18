@@ -15,48 +15,7 @@ class ItemAdapter(
         temporaryList.addAll(differ.currentList)
         temporaryList.addAll(dataViews)
         this.differ.submitList(temporaryList)
-        //notifyDataSetChanged()
     }
-
-
-    fun addLoadingView() {
-        //Add loading item
-        Handler(Looper.getMainLooper()).post {
-            val temporaryList:MutableList<Items> = mutableListOf()
-            temporaryList.addAll(differ.currentList)
-            temporaryList.add(Items.Loading(999))
-            differ.submitList(temporaryList)
-//            notifyItemInserted(differ.currentList.size - 1)
-        }
-    }
-
-    fun removeLoadingView() {
-        //Remove loading item
-        if (differ.currentList.size != 0) {
-            val temporaryList:MutableList<Items> = mutableListOf()
-            temporaryList.addAll(differ.currentList)
-            temporaryList.removeAt(differ.currentList.size - 1)
-            differ.submitList(temporaryList)
-            //notifyItemRemoved(differ.currentList.size)
-        }
-    }
-
-    /*  override fun getItemViewType(position: Int): Int {
-          return when (differ.currentList[position]) {
-              is Items.Loading -> Constant.VIEW_TYPE_LOADING
-              is Items.Company -> Constant.VIEW_TYPE_COMPANY
-              is Items.CompanySquare -> Constant.VIEW_TYPE_COMPANY_SQUARE
-              is Items.Clients -> Constant.VIEW_TYPE_CLIENTS
-              is Items.ClientsSquare -> Constant.VIEW_TYPE_CLIENTS_SQUARE
-
-
-          }
-     *//*     return if (differ.currentList[position] == null) {
-            Constant.VIEW_TYPE_LOADING
-        } else {
-            Constant.VIEW_TYPE_ITEM
-        }*//*
-    }*/
 
     init {
         delegatesManager.addDelegate(CompanyAdapterDelegate(onItemClicked))

@@ -1,26 +1,24 @@
 package com.example.lists
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.lists.databinding.FragmentMainBinding
 
-class MainFragment : Fragment() {
-    private var _binding: FragmentMainBinding? = null
-    private val binding get() = _binding!!
+class MainFragment : Fragment(R.layout.fragment_main) {
+    private val binding by viewBinding(FragmentMainBinding::bind)
+    private val toolbarVisibility by lazy {
+        activity as? ToolbarAddButtonVisible
+    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentMainBinding.inflate(inflater, container, false)
-        val view = binding.root
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.linearButton.setOnClickListener {
-            val listFragment = childFragmentManager.findFragmentById(R.id.container)
+            toolbarVisibility?.onToolbarHide(0)
+            val listFragment =
+                childFragmentManager.findFragmentById(R.id.container)
             val fragmentTransaction = childFragmentManager.beginTransaction()
             val fragment = ListFragment.newInstance(1)
             if (listFragment == null) {
@@ -30,7 +28,9 @@ class MainFragment : Fragment() {
             }
         }
         binding.gridButton.setOnClickListener {
-            val listFragment = childFragmentManager.findFragmentById(R.id.container)
+            toolbarVisibility?.onToolbarHide(1)
+            val listFragment =
+                childFragmentManager.findFragmentById(R.id.container)
             val fragmentTransaction = childFragmentManager.beginTransaction()
             val fragment = GridFragment()
             if (listFragment == null) {
@@ -40,7 +40,9 @@ class MainFragment : Fragment() {
             }
         }
         binding.staggeredGridButton.setOnClickListener {
-            val listFragment = childFragmentManager.findFragmentById(R.id.container)
+            toolbarVisibility?.onToolbarHide(1)
+            val listFragment =
+                childFragmentManager.findFragmentById(R.id.container)
             val fragmentTransaction = childFragmentManager.beginTransaction()
             val fragment = StaggeredFragment()
             if (listFragment == null) {
@@ -50,18 +52,13 @@ class MainFragment : Fragment() {
             }
         }
 
-        return view
     }
+
 
     fun addCompanySender() {
         val fragment = childFragmentManager.findFragmentById(R.id.container)
         if (fragment is ListFragment) {
             fragment.addCompany()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 }

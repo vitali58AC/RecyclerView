@@ -8,8 +8,8 @@ interface NeutralOnClickListener {
     fun onFragmentClick()
 }
 
-interface ToolbarAddButtonClickListener {
-    fun onToolbarClick()
+interface ToolbarAddButtonVisible {
+    fun onToolbarHide(state: Int)
 }
 
 interface OnLoadMoreListener {
