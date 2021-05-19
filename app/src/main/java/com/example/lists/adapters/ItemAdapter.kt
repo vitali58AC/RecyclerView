@@ -11,7 +11,7 @@ class ItemAdapter(
 ) : AsyncListDifferDelegationAdapter<Items>(ItemsDiffUtilCallback()) {
 
     fun addData(dataViews: MutableList<Items>) {
-        val temporaryList:MutableList<Items> = mutableListOf()
+        val temporaryList: MutableList<Items> = mutableListOf()
         temporaryList.addAll(differ.currentList)
         temporaryList.addAll(dataViews)
         this.differ.submitList(temporaryList)
@@ -35,6 +35,8 @@ class ItemAdapter(
             return when {
                 oldItem is Items.Company && newItem is Items.Company -> oldItem.id == newItem.id
                 oldItem is Items.Clients && newItem is Items.Clients -> oldItem.id == newItem.id
+                oldItem is Items.ClientsSquare && newItem is Items.ClientsSquare -> oldItem.id == newItem.id
+                oldItem is Items.CompanySquare && newItem is Items.CompanySquare -> oldItem.id == newItem.id
                 else -> false
             }
         }

@@ -110,7 +110,7 @@ sealed class Items : Parcelable {
 
     @Parcelize
     data class ClientsSquare(
-        val id: Long,
+        var id: Long,
         val image: String,
         val name: String,
         val rating: Double

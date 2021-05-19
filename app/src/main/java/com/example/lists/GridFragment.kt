@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lists.adapters.ItemAdapter
 import com.example.lists.databinding.FragmentGridBinding
 import jp.wasabeef.recyclerview.animators.LandingAnimator
+import kotlin.random.Random
 
 
 class GridFragment : Fragment() {
@@ -108,24 +110,32 @@ class GridFragment : Fragment() {
         loadMoreItemsCells = mutableListOf()
         val start = itemAdapter.itemCount
         //Load 16 more items
-        val end = start + 16
-        Handler(Looper.getMainLooper()).postDelayed({
-            for (i in start..end) {
-                loadMoreItemsCells.add(
-                    companyArrayList.random()
-                )
-            }
-            //Remove the Loading View
+        if (start <= 60) {
+            val end = start + 16
+            Handler(Looper.getMainLooper()).postDelayed({
+                for (i in start..end) {
+                    val randomItemWithRandomId = companyArrayList.random()
+                    when (randomItemWithRandomId) {
+                        is Items.ClientsSquare -> randomItemWithRandomId.id = Random.nextLong()
+                        is Items.CompanySquare -> randomItemWithRandomId.id = Random.nextLong()
+                        else -> error("Wrong class in loadMoreData")
+                    }
+                    loadMoreItemsCells.add(
+                        randomItemWithRandomId
+                    )
+                }
+                //Remove the Loading View
+                binding.progressBar.visibility = View.GONE
+                //We adding the data to our main ArrayList
+                itemAdapter.addData(loadMoreItemsCells)
+                //Change the boolean isLoading to false
+                scrollListener.setLoaded()
+                //Update the recyclerView in the main thread
+            }, 2000)
+        } else {
             binding.progressBar.visibility = View.GONE
-            //We adding the data to our main ArrayList
-            itemAdapter.addData(loadMoreItemsCells)
-            //Change the boolean isLoading to false
-            scrollListener.setLoaded()
-            //Update the recyclerView in the main thread
-        }, 3000)
-        Handler(Looper.getMainLooper()).postDelayed({
-            binding.companyList.scrollToPosition(start)
-        }, 3100)
+            Toast.makeText(requireContext(), "Maximum items!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setRVLayoutManager() {
