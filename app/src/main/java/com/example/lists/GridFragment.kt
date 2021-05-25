@@ -100,8 +100,6 @@ class GridFragment : Fragment() {
         setRVLayoutManager()
         setRVScrollListener()
         itemAdapter.updateCompany(companyArrayList)
-        itemAdapter.stateRestorationPolicy =
-            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         return view
     }
 

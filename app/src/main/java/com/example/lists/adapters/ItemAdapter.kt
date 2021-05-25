@@ -1,7 +1,5 @@
 package com.example.lists.adapters
 
-import android.os.Handler
-import android.os.Looper
 import androidx.recyclerview.widget.DiffUtil
 import com.example.lists.Items
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
