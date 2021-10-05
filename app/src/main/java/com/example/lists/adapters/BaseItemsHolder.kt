@@ -10,7 +10,56 @@ abstract class BaseItemHolder(
 
     init {
         view.setOnClickListener {
-            onItemClicked(bindingAdapterPosition)
+            onItemClicked(bindingAdap
+			
+			
+			
+			
+			
+			
+			dfjjgkjkjkkjkjktjgjigjkgjktguyjyktjtterPosition
+			
+			
+			
+			
+			
+			guhjhjfgjbhghfjvfbvjfvbvfjbvfehgfhehgyyrgyeffrbhfv
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			hjhjfhjffbterPosition)
         }
 
     }
